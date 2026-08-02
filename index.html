@@ -236,7 +236,7 @@ textarea.form-input { resize:vertical; min-height:80px; }
 .lightbox {
   display:none; position:fixed; inset:0; z-index:9999;
   background:rgba(10,10,15,0.96); align-items:center; justify-content:center;
-  padding:2rem;
+  padding:2rem; touch-action:pan-y;
 }
 .lightbox.open { display:flex; }
 .lightbox img {
@@ -507,6 +507,21 @@ document.addEventListener('keydown', function(e){
   if (e.key === 'ArrowLeft') navLightbox(-1);
   if (e.key === 'ArrowRight') navLightbox(1);
 });
+
+/* SWIPE (touch) navigacija — radi zajedno sa strelicama */
+var touchStartX = 0;
+var touchEndX = 0;
+document.getElementById('lightbox').addEventListener('touchstart', function(e){
+  touchStartX = e.changedTouches[0].screenX;
+}, { passive:true });
+document.getElementById('lightbox').addEventListener('touchend', function(e){
+  touchEndX = e.changedTouches[0].screenX;
+  var diff = touchEndX - touchStartX;
+  if (Math.abs(diff) > 40) {
+    if (diff < 0) navLightbox(1); else navLightbox(-1);
+  }
+}, { passive:true });
+
 </script>
 
 </body>
